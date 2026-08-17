@@ -408,6 +408,34 @@ const TOPICS = [
       {en:"I'm fine", ipa:"/aɪm faɪn/", vi:"Tôi khỏe", emoji:"😄"},
       {en:"Welcome", ipa:"/ˈwelkəm/", vi:"Chào mừng", emoji:"🤗"}
     ]},
+  { id:"commands3", name:"Đảo Câu Lệnh Lớp 3", emoji:"🧑‍🏫", color:"#FFF3C4", section:"grade3",
+    words:[
+      {en:"Stand up", ipa:"/stænd ʌp/", vi:"Đứng lên", emoji:"🧍"},
+      {en:"Sit down", ipa:"/sɪt daʊn/", vi:"Ngồi xuống", emoji:"🪑"},
+      {en:"Open your book", ipa:"/ˈoʊpən jʊr bʊk/", vi:"Mở sách ra", emoji:"📖"},
+      {en:"Close your book", ipa:"/kloʊz jʊr bʊk/", vi:"Đóng sách lại", emoji:"📕"},
+      {en:"Be quiet", ipa:"/biː ˈkwaɪət/", vi:"Hãy im lặng", emoji:"🤫"},
+      {en:"Listen", ipa:"/ˈlɪsən/", vi:"Hãy lắng nghe", emoji:"👂"},
+      {en:"Look", ipa:"/lʊk/", vi:"Hãy nhìn", emoji:"👀"},
+      {en:"Come here", ipa:"/kʌm hɪr/", vi:"Lại đây", emoji:"🚶"},
+      {en:"Raise your hand", ipa:"/reɪz jʊr hænd/", vi:"Giơ tay lên", emoji:"✋"},
+      {en:"Write", ipa:"/raɪt/", vi:"Hãy viết", emoji:"✍️"},
+      {en:"Read", ipa:"/riːd/", vi:"Hãy đọc", emoji:"📖"},
+      {en:"Repeat", ipa:"/rɪˈpiːt/", vi:"Hãy nhắc lại", emoji:"🔁"}
+    ]},
+  { id:"grammar3", name:"Đảo Ngữ Pháp Lớp 3", emoji:"3️⃣", color:"#FFE8B8", type:"grammar", section:"grade3",
+    words:[
+      {en:"am", category:"tobe3", sentence:"I ___ a pupil.", vi:"\"am\" dùng với I.", emoji:"📘"},
+      {en:"is", category:"tobe3", sentence:"This ___ a book.", vi:"\"is\" dùng với this/that/he/she/it.", emoji:"📘"},
+      {en:"are", category:"tobe3", sentence:"These ___ my pens.", vi:"\"are\" dùng với these/those/we/you/they.", emoji:"📘"},
+      {en:"This", category:"demo", sentence:"___ is my school bag.", vi:"\"This\" chỉ vật ở gần, số ít.", emoji:"👉"},
+      {en:"That", category:"demo", sentence:"___ is your house over there.", vi:"\"That\" chỉ vật ở xa, số ít.", emoji:"👉"},
+      {en:"These", category:"demo", sentence:"___ are my friends.", vi:"\"These\" chỉ vật ở gần, số nhiều.", emoji:"👉"},
+      {en:"Those", category:"demo", sentence:"___ are their bikes over there.", vi:"\"Those\" chỉ vật ở xa, số nhiều.", emoji:"👉"},
+      {en:"books", category:"plural", sentence:"I have five ___. (book)", vi:"Thêm \"s\" để thành số nhiều.", emoji:"📚"},
+      {en:"pens", category:"plural", sentence:"She has two ___. (pen)", vi:"Thêm \"s\" để thành số nhiều.", emoji:"🖊️"},
+      {en:"boxes", category:"plural", sentence:"There are three ___. (box)", vi:"Từ tận cùng \"x\" thêm \"es\".", emoji:"📦"}
+    ]},
   { id:"nations", name:"Đảo Quốc Gia", emoji:"🌏", color:"#FFE9D6", section:"homework",
     words:[
       {en:"nation", ipa:"/ˈneɪʃən/", vi:"quốc gia", emoji:"🌍"},
@@ -515,6 +543,51 @@ const TOPICS = [
       {en:"in", category:"preposition", sentence:"My birthday is ___ June.", vi:"\"in\" dùng với tháng.", emoji:"📍"},
       {en:"at", category:"preposition", sentence:"I get up ___ 7 o'clock.", vi:"\"at\" dùng với giờ cụ thể.", emoji:"📍"},
       {en:"in", category:"preposition", sentence:"She was born ___ 2016.", vi:"\"in\" dùng với năm.", emoji:"📍"}
+    ]},
+  { id:"grammar4plus", name:"Đảo Ngữ Pháp Lớp 4 (Bổ Sung)", emoji:"4️⃣", color:"#C8E6F5", type:"grammar", section:"grade4plus",
+    words:[
+      {en:"There is", category:"there", sentence:"___ a cat under the table.", vi:"Dùng với danh từ số ít.", emoji:"📕"},
+      {en:"There are", category:"there", sentence:"___ some books on the desk.", vi:"Dùng với danh từ số nhiều.", emoji:"📕"},
+      {en:"likes", category:"presentsimple", sentence:"She ___ ice cream. (like)", vi:"Thêm \"s\" khi chủ ngữ là he/she/it.", emoji:"🍦"},
+      {en:"plays", category:"presentsimple", sentence:"He ___ football every day. (play)", vi:"Thêm \"s\" khi chủ ngữ là he/she/it.", emoji:"⚽"},
+      {en:"play", category:"presentsimple", sentence:"They ___ football every day. (play)", vi:"Không thêm \"s\" khi chủ ngữ we/you/they/I.", emoji:"⚽"},
+      {en:"o'clock", category:"time", sentence:"It's seven ___.", vi:"Dùng khi giờ tròn.", emoji:"🕖"},
+      {en:"half past", category:"time", sentence:"It's ___ six. (6:30)", vi:"Chỉ 30 phút.", emoji:"🕡"}
+    ]},
+  { id:"irregular5", name:"Đảo Động Từ Bất Quy Tắc", emoji:"🔄", color:"#F5D6C8", section:"grade5",
+    words:[
+      {en:"went", ipa:"/went/", vi:"đi (quá khứ của \"go\")", emoji:"🚶"},
+      {en:"ate", ipa:"/eɪt/", vi:"ăn (quá khứ của \"eat\")", emoji:"🍽️"},
+      {en:"saw", ipa:"/sɔː/", vi:"nhìn thấy (quá khứ của \"see\")", emoji:"👀"},
+      {en:"did", ipa:"/dɪd/", vi:"làm (quá khứ của \"do\")", emoji:"✅"},
+      {en:"had", ipa:"/hæd/", vi:"có (quá khứ của \"have\")", emoji:"🤲"},
+      {en:"was", ipa:"/wʌz/", vi:"là/thì/ở (quá khứ của \"am/is\")", emoji:"🕰️"},
+      {en:"were", ipa:"/wɜːr/", vi:"là/thì/ở (quá khứ của \"are\")", emoji:"🕰️"},
+      {en:"bought", ipa:"/bɔːt/", vi:"mua (quá khứ của \"buy\")", emoji:"🛍️"},
+      {en:"made", ipa:"/meɪd/", vi:"làm/tạo ra (quá khứ của \"make\")", emoji:"🛠️"},
+      {en:"took", ipa:"/tʊk/", vi:"lấy (quá khứ của \"take\")", emoji:"✋"},
+      {en:"gave", ipa:"/ɡeɪv/", vi:"cho (quá khứ của \"give\")", emoji:"🎁"},
+      {en:"played", ipa:"/pleɪd/", vi:"chơi (quá khứ của \"play\")", emoji:"⚽"},
+      {en:"watched", ipa:"/wɑːtʃt/", vi:"xem (quá khứ của \"watch\")", emoji:"📺"},
+      {en:"visited", ipa:"/ˈvɪzɪtɪd/", vi:"đi thăm (quá khứ của \"visit\")", emoji:"🏛️"},
+      {en:"walked", ipa:"/wɔːkt/", vi:"đi bộ (quá khứ của \"walk\")", emoji:"🚶"},
+      {en:"studied", ipa:"/ˈstʌdid/", vi:"học (quá khứ của \"study\")", emoji:"📚"}
+    ]},
+  { id:"grammar5", name:"Đảo Ngữ Pháp Lớp 5", emoji:"5️⃣", color:"#F0C8DC", type:"grammar", section:"grade5",
+    words:[
+      {en:"went", category:"pastirregular", sentence:"I ___ to school yesterday. (go)", vi:"Quá khứ của \"go\".", emoji:"🚶"},
+      {en:"played", category:"pastregular", sentence:"She ___ football last Sunday. (play)", vi:"Động từ có quy tắc, thêm \"ed\".", emoji:"⚽"},
+      {en:"was", category:"pastbe", sentence:"I ___ at home yesterday.", vi:"Quá khứ của \"am/is\".", emoji:"🕰️"},
+      {en:"were", category:"pastbe", sentence:"They ___ at the park last week.", vi:"Quá khứ của \"are\".", emoji:"🕰️"},
+      {en:"Did", category:"pastquestion", sentence:"___ you go to the zoo yesterday?", vi:"Đặt \"Did\" đầu câu hỏi thì quá khứ.", emoji:"❓"},
+      {en:"going to", category:"future", sentence:"I am ___ visit my grandma tomorrow.", vi:"Diễn tả dự định trong tương lai.", emoji:"🔮"},
+      {en:"bigger", category:"comparative", sentence:"This house is ___ than that one. (big)", vi:"So sánh hơn: tính từ ngắn + \"er\".", emoji:"📏"},
+      {en:"more beautiful", category:"comparative", sentence:"This flower is ___ than that one. (beautiful)", vi:"So sánh hơn: tính từ dài dùng \"more\".", emoji:"🌸"},
+      {en:"the biggest", category:"superlative", sentence:"This is ___ house in the town. (big)", vi:"So sánh nhất: tính từ ngắn + \"est\".", emoji:"🏆"},
+      {en:"should", category:"modal", sentence:"You ___ study hard.", vi:"Đưa ra lời khuyên.", emoji:"👍"},
+      {en:"shouldn't", category:"modal", sentence:"You ___ eat too much candy.", vi:"Lời khuyên không nên làm.", emoji:"👎"},
+      {en:"have to", category:"modal", sentence:"I ___ do my homework now.", vi:"Diễn tả sự bắt buộc.", emoji:"📌"},
+      {en:"would like to", category:"modal", sentence:"I ___ drink some milk.", vi:"Cách nói lịch sự khi muốn điều gì.", emoji:"🙏"}
     ]},
   { id:"animals", name:"Đảo Động Vật", emoji:"🐾", color:"#FFE4C4", section:"themes",
     words:[
@@ -805,9 +878,12 @@ function isUnlocked(index){
 }
 
 const SECTION_META = {
-  foundation: { icon:"🎯", label:"Nền Tảng", sub:"Học chắc gốc trước khi vào chủ đề" },
-  homework:   { icon:"📚", label:"Bài Tập Cô Giao", sub:"Đúng nội dung cô giáo giao trên lớp" },
-  themes:     { icon:"🌈", label:"Từ Vựng Chủ Đề", sub:"Mở rộng vốn từ theo từng chủ đề" }
+  foundation:  { icon:"🎯", label:"Nền Tảng", sub:"Học chắc gốc trước khi vào chủ đề" },
+  grade3:      { icon:"3️⃣", label:"Ngữ Pháp Lớp 3", sub:"Câu lệnh lớp học, to be, this/that" },
+  homework:    { icon:"📚", label:"Bài Tập Cô Giao (Lớp 4)", sub:"Đúng nội dung cô giáo giao trên lớp" },
+  grade4plus:  { icon:"4️⃣", label:"Ngữ Pháp Lớp 4 (Bổ Sung)", sub:"There is/are, thì hiện tại, xem giờ" },
+  grade5:      { icon:"5️⃣", label:"Ngữ Pháp Lớp 5", sub:"Thì quá khứ, tương lai, so sánh" },
+  themes:      { icon:"🌈", label:"Từ Vựng Chủ Đề", sub:"Mở rộng vốn từ theo từng chủ đề" }
 };
 
 function renderMap(){
