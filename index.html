@@ -264,6 +264,39 @@
   .dict-speak-btn.secondary{background:var(--coral);}
   .dict-audio-row{display:flex; gap:8px; margin-top:6px;}
 
+  /* spelling game */
+  .spell-blanks{
+    display:flex; justify-content:center; flex-wrap:wrap; gap:8px;
+    margin:18px 0 22px;
+  }
+  .spell-blank{
+    width:38px; height:46px; border-bottom:4px solid var(--sand-dark);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Baloo 2'; font-weight:700; font-size:24px; color:var(--ink);
+    text-transform:uppercase;
+  }
+  .spell-blank.filled{border-color:var(--leaf); color:var(--leaf);}
+  .spell-tiles{
+    display:flex; justify-content:center; flex-wrap:wrap; gap:10px;
+    margin-bottom:16px;
+  }
+  .spell-tile{
+    width:46px; height:46px; border-radius:12px; border:none;
+    background:var(--white); box-shadow:0 3px 0 var(--sand-dark);
+    font-family:'Baloo 2'; font-weight:700; font-size:20px; color:var(--ink);
+    text-transform:uppercase; cursor:pointer;
+  }
+  .spell-tile:active{transform:translateY(2px); box-shadow:0 1px 0 var(--sand-dark);}
+  .spell-tile.used{visibility:hidden;}
+  .spell-tile.shake{animation: shake .35s ease;}
+  @keyframes shake{
+    0%,100%{transform:translateX(0);}
+    25%{transform:translateX(-6px);}
+    75%{transform:translateX(6px);}
+  }
+  .spell-progress{display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;}
+  .spell-progress span{font-size:14px; font-weight:800; color:var(--ink-soft);}
+
   @media (max-width:420px){
     .card{width:100%; flex-wrap:wrap;}
     .go-btn, .lock-tag{margin-left:auto;}
@@ -282,6 +315,7 @@
       <span>Đảo Từ Vựng</span>
     </div>
     <div class="topbar-right">
+      <button class="dict-btn" id="openSpellBtn">🧩 <span class="dict-btn-label">Ghép Chữ</span></button>
       <button class="dict-btn" id="openDictBtn">📖 <span class="dict-btn-label">Tra từ</span></button>
       <div class="coins">🪙 <span id="coinTotal">0</span></div>
     </div>
@@ -319,6 +353,10 @@
       <p class="dict-empty">Kết quả tra cứu sẽ hiện ở đây.</p>
     </div>
   </div>
+</div>
+
+<div id="spellOverlay" class="overlay hidden">
+  <div class="modal" id="spellModalBox"></div>
 </div>
 
 <script>
@@ -1187,6 +1225,136 @@ function closeDict(){
   document.getElementById('dictOverlay').classList.add('hidden');
 }
 
+/* ---------- Spelling game (Ghép Chữ): tap letters in order to build the word ---------- */
+
+let spellSession = null;
+
+function collectSpellableWords(){
+  const pool = [];
+  TOPICS.forEach(t=>{
+    if(t.id === 'alphabet' || t.type === 'grammar') return;
+    t.words.forEach(w=>{
+      if(/^[A-Za-z]{2,}$/.test(w.en)){
+        pool.push({ en: w.en, vi: w.vi, emoji: w.emoji, ipa: w.ipa || '' });
+      }
+    });
+  });
+  return pool;
+}
+
+function openSpellGame(){
+  const pool = shuffle(collectSpellableWords());
+  const sessionSize = Math.min(10, pool.length);
+  spellSession = {
+    words: pool.slice(0, sessionSize),
+    index: 0,
+    mistakes: 0,
+    solved: 0
+  };
+  document.getElementById('spellOverlay').classList.remove('hidden');
+  renderSpellWord();
+}
+
+function closeSpell(){
+  document.getElementById('spellOverlay').classList.add('hidden');
+  spellSession = null;
+  renderMap();
+}
+
+function renderSpellWord(){
+  const box = document.getElementById('spellModalBox');
+  const w = spellSession.words[spellSession.index];
+  const letters = w.en.toUpperCase().split('');
+  const tileOrder = shuffle(letters.map((ch, i)=>({ ch, id:i })));
+
+  box.innerHTML = `
+    <button class="close" id="spellCloseBtn">✕</button>
+    <div class="spell-progress">
+      <span>Từ ${spellSession.index+1}/${spellSession.words.length}</span>
+      <span>🪙 ${spellSession.solved}</span>
+    </div>
+    <div class="prompt-card">
+      <div class="prompt-emoji">${w.emoji || '🧩'}</div>
+      <p class="prompt-vi">${w.vi}</p>
+      <p class="prompt-hint">Ghép các chữ cái theo đúng thứ tự</p>
+    </div>
+    <div class="spell-blanks" id="spellBlanks">
+      ${letters.map(()=> `<div class="spell-blank"></div>`).join('')}
+    </div>
+    <div class="spell-tiles" id="spellTiles">
+      ${tileOrder.map(t=> `<button class="spell-tile" data-tileid="${t.id}" data-ch="${t.ch}">${t.ch}</button>`).join('')}
+    </div>
+    <div class="feedback" id="spellFeedback"></div>
+  `;
+
+  document.getElementById('spellCloseBtn').addEventListener('click', closeSpell);
+
+  const state = { target: letters, filled: 0 };
+  document.querySelectorAll('#spellTiles .spell-tile').forEach(tile=>{
+    tile.addEventListener('click', ()=>{
+      const ch = tile.getAttribute('data-ch');
+      if(ch === state.target[state.filled]){
+        const blanks = document.querySelectorAll('#spellBlanks .spell-blank');
+        blanks[state.filled].textContent = ch;
+        blanks[state.filled].classList.add('filled');
+        tile.classList.add('used');
+        state.filled += 1;
+        if(state.filled === state.target.length){
+          spellSession.solved += 1;
+          const fb = document.getElementById('spellFeedback');
+          fb.textContent = 'Chính xác! Giỏi quá! 🎉';
+          fb.className = 'feedback ok';
+          setTimeout(()=>{
+            spellSession.index += 1;
+            if(spellSession.index < spellSession.words.length){
+              renderSpellWord();
+            } else {
+              finishSpellSession();
+            }
+          }, 900);
+        }
+      } else {
+        spellSession.mistakes += 1;
+        tile.classList.remove('shake');
+        void tile.offsetWidth;
+        tile.classList.add('shake');
+      }
+    });
+  });
+}
+
+function finishSpellSession(){
+  const total = spellSession.words.length;
+  const mistakes = spellSession.mistakes;
+  let stars = 3;
+  if(mistakes > 8) stars = 1;
+  else if(mistakes > 3) stars = 2;
+  const coinsEarned = total * 5;
+  coinTotal += coinsEarned;
+  saveCoins();
+
+  const box = document.getElementById('spellModalBox');
+  box.innerHTML = `
+    <button class="close" id="spellCloseBtn">✕</button>
+    <div class="result">
+      <p class="prompt-hint" style="margin-bottom:2px;">Hoàn thành trò Ghép Chữ</p>
+      <div class="big-stars">
+        ${[0,1,2].map(k=>`<span class="${k<stars?'star-on':'star-off'}">★</span>`).join('')}
+      </div>
+      <h3 class="display">Ghép đúng ${total} từ, sai ${mistakes} lần</h3>
+      <p>Nhận thêm ${coinsEarned} 🪙 xu. Tổng xu: ${coinTotal}</p>
+      <div class="result-actions">
+        <button class="btn btn-ghost" id="spellBackBtn">Về bản đồ</button>
+        <button class="btn btn-primary" id="spellRetryBtn">Chơi lại</button>
+      </div>
+    </div>
+  `;
+  document.getElementById('spellCloseBtn').addEventListener('click', closeSpell);
+  document.getElementById('spellBackBtn').addEventListener('click', closeSpell);
+  document.getElementById('spellRetryBtn').addEventListener('click', openSpellGame);
+  document.getElementById('coinTotal').textContent = coinTotal;
+}
+
 (async function init(){
   await loadProgress();
   document.getElementById('loadingMsg').classList.add('hidden');
@@ -1200,6 +1368,8 @@ function closeDict(){
   document.getElementById('dictInput').addEventListener('keydown', (e)=>{
     if(e.key === 'Enter') runDictionarySearch();
   });
+
+  document.getElementById('openSpellBtn').addEventListener('click', openSpellGame);
 })();
 </script>
 
