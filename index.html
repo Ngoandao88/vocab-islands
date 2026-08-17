@@ -81,6 +81,25 @@
   .path{position:relative; padding:6px 0;}
   .path svg{position:absolute; top:0; left:0; width:100%; height:100%; z-index:0;}
 
+  .section-header{
+    position:relative; z-index:1;
+    display:flex; align-items:center; gap:10px;
+    margin:26px 0 14px;
+  }
+  .section-header:first-child{ margin-top:4px; }
+  .section-header .line{
+    flex:1; height:2px; background:rgba(255,255,255,.18); border-radius:2px;
+  }
+  .section-header .label{
+    display:flex; align-items:center; gap:8px;
+    background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.22);
+    color:var(--white); font-family:'Baloo 2'; font-weight:700; font-size:15.5px;
+    padding:8px 16px; border-radius:999px; white-space:nowrap;
+  }
+  .section-header .sub{
+    color:#CFE8F2; font-size:12.5px; font-weight:600; font-family:'Nunito';
+  }
+
   .island-row{
     position:relative; z-index:1;
     display:flex; align-items:center;
@@ -304,7 +323,7 @@
 
 <script>
 const TOPICS = [
-  { id:"alphabet", name:"Đảo Bảng Chữ Cái", emoji:"🔤", color:"#FFF0C2",
+  { id:"alphabet", name:"Đảo Bảng Chữ Cái", emoji:"🔤", color:"#FFF0C2", section:"foundation",
     words:[
       {en:"A", ipa:"/eɪ/", vi:"chữ cái A", emoji:"A"},
       {en:"B", ipa:"/biː/", vi:"chữ cái B", emoji:"B"},
@@ -333,7 +352,7 @@ const TOPICS = [
       {en:"Y", ipa:"/waɪ/", vi:"chữ cái Y", emoji:"Y"},
       {en:"Z", ipa:"/ziː/", vi:"chữ cái Z", emoji:"Z"}
     ]},
-  { id:"phrases", name:"Đảo Giao Tiếp Cơ Bản", emoji:"💬", color:"#D9F2E3",
+  { id:"phrases", name:"Đảo Giao Tiếp Cơ Bản", emoji:"💬", color:"#D9F2E3", section:"foundation",
     words:[
       {en:"Hello", ipa:"/həˈloʊ/", vi:"Xin chào", emoji:"👋"},
       {en:"Hi", ipa:"/haɪ/", vi:"Chào (thân mật)", emoji:"👋"},
@@ -351,7 +370,115 @@ const TOPICS = [
       {en:"I'm fine", ipa:"/aɪm faɪn/", vi:"Tôi khỏe", emoji:"😄"},
       {en:"Welcome", ipa:"/ˈwelkəm/", vi:"Chào mừng", emoji:"🤗"}
     ]},
-  { id:"animals", name:"Đảo Động Vật", emoji:"🐾", color:"#FFE4C4",
+  { id:"nations", name:"Đảo Quốc Gia", emoji:"🌏", color:"#FFE9D6", section:"homework",
+    words:[
+      {en:"nation", ipa:"/ˈneɪʃən/", vi:"quốc gia", emoji:"🌍"},
+      {en:"nationality", ipa:"/ˌnæʃəˈnæləti/", vi:"quốc tịch", emoji:"🪪"},
+      {en:"Vietnam", ipa:"/ˌviˈetˈnɑːm/", vi:"nước Việt Nam", emoji:"🇻🇳"},
+      {en:"Vietnamese", ipa:"/ˌvjetnəˈmiːz/", vi:"người Việt Nam / tiếng Việt", emoji:"🇻🇳"},
+      {en:"Japan", ipa:"/dʒəˈpæn/", vi:"nước Nhật Bản", emoji:"🇯🇵"},
+      {en:"Japanese", ipa:"/ˌdʒæpəˈniːz/", vi:"người Nhật / tiếng Nhật", emoji:"🇯🇵"},
+      {en:"China", ipa:"/ˈtʃaɪnə/", vi:"nước Trung Quốc", emoji:"🇨🇳"},
+      {en:"Chinese", ipa:"/ˌtʃaɪˈniːz/", vi:"người Trung Quốc / tiếng Trung", emoji:"🇨🇳"},
+      {en:"England", ipa:"/ˈɪŋɡlənd/", vi:"nước Anh", emoji:"🏴"},
+      {en:"English", ipa:"/ˈɪŋɡlɪʃ/", vi:"tiếng Anh / người Anh", emoji:"🇬🇧"},
+      {en:"Britain", ipa:"/ˈbrɪtn/", vi:"nước Anh (Vương quốc Anh)", emoji:"🇬🇧"},
+      {en:"British", ipa:"/ˈbrɪtɪʃ/", vi:"người Anh", emoji:"🇬🇧"}
+    ]},
+  { id:"calendar", name:"Đảo Lịch & Thời Gian", emoji:"🗓️", color:"#D6F5F0", section:"homework",
+    words:[
+      {en:"Monday", ipa:"/ˈmʌndeɪ/", vi:"Thứ Hai", emoji:"📅"},
+      {en:"Tuesday", ipa:"/ˈtuːzdeɪ/", vi:"Thứ Ba", emoji:"📅"},
+      {en:"Wednesday", ipa:"/ˈwenzdeɪ/", vi:"Thứ Tư", emoji:"📅"},
+      {en:"Thursday", ipa:"/ˈθɜːrzdeɪ/", vi:"Thứ Năm", emoji:"📅"},
+      {en:"Friday", ipa:"/ˈfraɪdeɪ/", vi:"Thứ Sáu", emoji:"📅"},
+      {en:"Saturday", ipa:"/ˈsætərdeɪ/", vi:"Thứ Bảy", emoji:"📅"},
+      {en:"Sunday", ipa:"/ˈsʌndeɪ/", vi:"Chủ Nhật", emoji:"📅"},
+      {en:"January", ipa:"/ˈdʒænjueri/", vi:"Tháng 1", emoji:"🗓️"},
+      {en:"February", ipa:"/ˈfebrueri/", vi:"Tháng 2", emoji:"🗓️"},
+      {en:"March", ipa:"/mɑːrtʃ/", vi:"Tháng 3", emoji:"🗓️"},
+      {en:"April", ipa:"/ˈeɪprəl/", vi:"Tháng 4", emoji:"🗓️"},
+      {en:"May", ipa:"/meɪ/", vi:"Tháng 5", emoji:"🗓️"},
+      {en:"June", ipa:"/dʒuːn/", vi:"Tháng 6", emoji:"🗓️"},
+      {en:"July", ipa:"/dʒʊˈlaɪ/", vi:"Tháng 7", emoji:"🗓️"},
+      {en:"August", ipa:"/ˈɔːɡəst/", vi:"Tháng 8", emoji:"🗓️"},
+      {en:"September", ipa:"/sepˈtembər/", vi:"Tháng 9", emoji:"🗓️"},
+      {en:"October", ipa:"/ɑːkˈtoʊbər/", vi:"Tháng 10", emoji:"🗓️"},
+      {en:"November", ipa:"/noʊˈvembər/", vi:"Tháng 11", emoji:"🗓️"},
+      {en:"December", ipa:"/dɪˈsembər/", vi:"Tháng 12", emoji:"🗓️"},
+      {en:"Spring", ipa:"/sprɪŋ/", vi:"Mùa xuân", emoji:"🌸"},
+      {en:"Summer", ipa:"/ˈsʌmər/", vi:"Mùa hè", emoji:"☀️"},
+      {en:"Autumn", ipa:"/ˈɔːtəm/", vi:"Mùa thu (còn gọi là Fall)", emoji:"🍂"},
+      {en:"Winter", ipa:"/ˈwɪntər/", vi:"Mùa đông", emoji:"❄️"},
+      {en:"in the morning", ipa:"/ɪn ðə ˈmɔːrnɪŋ/", vi:"vào buổi sáng", emoji:"🌅"},
+      {en:"in the afternoon", ipa:"/ɪn ði ˌæftərˈnuːn/", vi:"vào buổi chiều", emoji:"🌤️"},
+      {en:"in the evening", ipa:"/ɪn ði ˈiːvnɪŋ/", vi:"vào buổi tối", emoji:"🌆"},
+      {en:"at night", ipa:"/æt naɪt/", vi:"vào ban đêm", emoji:"🌙"},
+      {en:"at noon", ipa:"/æt nuːn/", vi:"vào buổi trưa (12h trưa)", emoji:"🕛"},
+      {en:"at midnight", ipa:"/æt ˈmɪdnaɪt/", vi:"vào lúc nửa đêm (12h đêm)", emoji:"🌃"}
+    ]},
+  { id:"grammarwords", name:"Đảo Từ Ngữ Pháp Cơ Bản", emoji:"📌", color:"#E8E0FF", section:"homework",
+    words:[
+      {en:"How", ipa:"/haʊ/", vi:"như thế nào / bằng cách nào", emoji:"❓"},
+      {en:"Where", ipa:"/wer/", vi:"ở đâu", emoji:"❓"},
+      {en:"When", ipa:"/wen/", vi:"khi nào", emoji:"❓"},
+      {en:"What", ipa:"/wʌt/", vi:"cái gì", emoji:"❓"},
+      {en:"How much", ipa:"/haʊ mʌtʃ/", vi:"bao nhiêu (danh từ không đếm được)", emoji:"❓"},
+      {en:"How many", ipa:"/haʊ ˈmeni/", vi:"bao nhiêu (danh từ đếm được)", emoji:"❓"},
+      {en:"on", ipa:"/ɑːn/", vi:"trên, vào (thứ/ngày)", emoji:"📍"},
+      {en:"in", ipa:"/ɪn/", vi:"trong, vào (tháng/năm/mùa)", emoji:"📍"},
+      {en:"at", ipa:"/æt/", vi:"tại, vào lúc (giờ cụ thể)", emoji:"📍"},
+      {en:"my", ipa:"/maɪ/", vi:"của tôi", emoji:"👤"},
+      {en:"your", ipa:"/jʊr/", vi:"của bạn", emoji:"👤"},
+      {en:"his", ipa:"/hɪz/", vi:"của anh ấy", emoji:"👤"},
+      {en:"her", ipa:"/hɜːr/", vi:"của cô ấy", emoji:"👤"},
+      {en:"its", ipa:"/ɪts/", vi:"của nó", emoji:"👤"},
+      {en:"our", ipa:"/aʊr/", vi:"của chúng tôi", emoji:"👤"},
+      {en:"their", ipa:"/ðer/", vi:"của họ", emoji:"👤"}
+    ]},
+  { id:"livingplaces", name:"Đảo Nơi Ở & Cuộc Sống", emoji:"🏘️", color:"#E6F0D6", section:"homework",
+    words:[
+      {en:"can", ipa:"/kæn/", vi:"có thể", emoji:"👍"},
+      {en:"can't", ipa:"/kænt/", vi:"không thể", emoji:"👎"},
+      {en:"party", ipa:"/ˈpɑːrti/", vi:"bữa tiệc", emoji:"🎉"},
+      {en:"come", ipa:"/kʌm/", vi:"đi đến / đến", emoji:"🚶"},
+      {en:"live", ipa:"/lɪv/", vi:"sống", emoji:"🏠"},
+      {en:"street", ipa:"/striːt/", vi:"phố", emoji:"🛣️"},
+      {en:"road", ipa:"/roʊd/", vi:"đường", emoji:"🛣️"},
+      {en:"city", ipa:"/ˈsɪti/", vi:"thành phố", emoji:"🏙️"},
+      {en:"countryside", ipa:"/ˈkʌntrisaɪd/", vi:"nông thôn", emoji:"🌾"},
+      {en:"village", ipa:"/ˈvɪlɪdʒ/", vi:"ngôi làng", emoji:"🏘️"},
+      {en:"house", ipa:"/haʊs/", vi:"ngôi nhà", emoji:"🏡"},
+      {en:"town", ipa:"/taʊn/", vi:"thị trấn", emoji:"🏘️"},
+      {en:"big", ipa:"/bɪɡ/", vi:"to", emoji:"⬆️"},
+      {en:"small", ipa:"/smɔːl/", vi:"nhỏ", emoji:"⬇️"},
+      {en:"quiet", ipa:"/ˈkwaɪət/", vi:"yên tĩnh", emoji:"🤫"},
+      {en:"noisy", ipa:"/ˈnɔɪzi/", vi:"ồn ào / náo nhiệt", emoji:"📢"},
+      {en:"busy", ipa:"/ˈbɪzi/", vi:"bận rộn / đông đúc", emoji:"🏃"}
+    ]},
+  { id:"grammarpractice", name:"Đảo Luyện Ngữ Pháp", emoji:"✏️", color:"#FFE0EC", type:"grammar", section:"homework",
+    words:[
+      {en:"can", category:"canform", sentence:"I ___ come to the party.", vi:"\"can\" diễn tả có thể làm được.", emoji:"👍"},
+      {en:"can't", category:"canform", sentence:"He ___ come to the party.", vi:"\"can't\" diễn tả không thể làm được.", emoji:"👎"},
+      {en:"Can", category:"canform", sentence:"___ you come to the party?", vi:"Đặt \"Can\" đầu câu để hỏi.", emoji:"❓"},
+      {en:"How", category:"wh", sentence:"___ are you? - I'm fine.", vi:"Hỏi tình trạng, sức khỏe.", emoji:"❓"},
+      {en:"How", category:"wh", sentence:"___ is your trip? - It is fun.", vi:"Hỏi tính chất, cảm nhận.", emoji:"❓"},
+      {en:"Where", category:"wh", sentence:"___ do you live? - I live in Hanoi.", vi:"Hỏi nơi sống.", emoji:"❓"},
+      {en:"Where", category:"wh", sentence:"___ are you from? - I'm from Vietnam.", vi:"Hỏi quê quán, nguồn gốc.", emoji:"❓"},
+      {en:"How many", category:"quantity", sentence:"___ books do you need?", vi:"Dùng với danh từ đếm được.", emoji:"🔢"},
+      {en:"How much", category:"quantity", sentence:"___ water do you drink?", vi:"Dùng với danh từ không đếm được.", emoji:"🔢"},
+      {en:"my", category:"possessive", sentence:"This is ___ book.", vi:"\"my\" = của tôi.", emoji:"👤"},
+      {en:"your", category:"possessive", sentence:"Is that ___ pen?", vi:"\"your\" = của bạn.", emoji:"👤"},
+      {en:"his", category:"possessive", sentence:"He loves ___ dog.", vi:"\"his\" = của anh ấy.", emoji:"👤"},
+      {en:"her", category:"possessive", sentence:"She loves ___ cat.", vi:"\"her\" = của cô ấy.", emoji:"👤"},
+      {en:"our", category:"possessive", sentence:"This is ___ classroom.", vi:"\"our\" = của chúng tôi.", emoji:"👤"},
+      {en:"their", category:"possessive", sentence:"That is ___ house.", vi:"\"their\" = của họ.", emoji:"👤"},
+      {en:"on", category:"preposition", sentence:"I go to school ___ Monday.", vi:"\"on\" dùng với thứ trong tuần.", emoji:"📍"},
+      {en:"in", category:"preposition", sentence:"My birthday is ___ June.", vi:"\"in\" dùng với tháng.", emoji:"📍"},
+      {en:"at", category:"preposition", sentence:"I get up ___ 7 o'clock.", vi:"\"at\" dùng với giờ cụ thể.", emoji:"📍"},
+      {en:"in", category:"preposition", sentence:"She was born ___ 2016.", vi:"\"in\" dùng với năm.", emoji:"📍"}
+    ]},
+  { id:"animals", name:"Đảo Động Vật", emoji:"🐾", color:"#FFE4C4", section:"themes",
     words:[
       {en:"cat", ipa:"/kæt/", vi:"con mèo", emoji:"🐱"},
       {en:"dog", ipa:"/dɔːɡ/", vi:"con chó", emoji:"🐶"},
@@ -639,11 +766,31 @@ function isUnlocked(index){
   return progress[prev.id] && progress[prev.id].stars >= 1;
 }
 
+const SECTION_META = {
+  foundation: { icon:"🎯", label:"Nền Tảng", sub:"Học chắc gốc trước khi vào chủ đề" },
+  homework:   { icon:"📚", label:"Bài Tập Cô Giao", sub:"Đúng nội dung cô giáo giao trên lớp" },
+  themes:     { icon:"🌈", label:"Từ Vựng Chủ Đề", sub:"Mở rộng vốn từ theo từng chủ đề" }
+};
+
 function renderMap(){
   document.getElementById('coinTotal').textContent = coinTotal;
   const area = document.getElementById('mapArea');
   area.innerHTML = '';
+  let lastSection = null;
   TOPICS.forEach((t, i)=>{
+    if(t.section && t.section !== lastSection){
+      lastSection = t.section;
+      const meta = SECTION_META[t.section] || { icon:"⭐", label:t.section, sub:"" };
+      const header = document.createElement('div');
+      header.className = 'section-header';
+      header.innerHTML = `
+        <div class="line"></div>
+        <div class="label">${meta.icon} ${meta.label}${meta.sub ? ` <span class="sub">· ${meta.sub}</span>` : ''}</div>
+        <div class="line"></div>
+      `;
+      area.appendChild(header);
+    }
+
     const unlocked = isUnlocked(i);
     const p = progress[t.id] || {stars:0, best:0};
     const row = document.createElement('div');
@@ -682,12 +829,21 @@ function renderMap(){
   });
 }
 
+function uniqueByEn(arr){
+  const seen = new Set();
+  const result = [];
+  for(const item of arr){
+    if(!seen.has(item.en)){ seen.add(item.en); result.push(item); }
+  }
+  return result;
+}
+
 function buildQuestions(topic){
   const sessionSize = Math.min(10, topic.words.length);
   const selected = shuffle(topic.words).slice(0, sessionSize);
   const selectedEnSet = new Set(selected.map(w=>w.en));
   return selected.map(w=>{
-    let pool = topic.words.filter(x=>x.en!==w.en);
+    let pool = uniqueByEn(topic.words.filter(x=>x.en!==w.en));
     if(topic.type === 'grammar' && w.category){
       const sameCat = pool.filter(x=>x.category === w.category);
       if(sameCat.length >= 3) pool = sameCat;
