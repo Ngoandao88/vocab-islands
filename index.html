@@ -43,6 +43,7 @@
   /* header */
   .topbar{
     display:flex; align-items:center; justify-content:space-between;
+    flex-wrap:wrap; gap:10px;
     background:rgba(255,255,255,.08);
     border:1px solid rgba(255,255,255,.18);
     border-radius:20px;
@@ -297,6 +298,39 @@
   .spell-progress{display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;}
   .spell-progress span{font-size:14px; font-weight:800; color:var(--ink-soft);}
 
+  /* AI chat */
+  .chat-modal{display:flex; flex-direction:column; max-height:min(82vh, 640px);}
+  .chat-messages{
+    flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:10px;
+    padding:6px 2px; margin:4px 0 12px; min-height:180px;
+  }
+  .chat-bubble{
+    max-width:82%; padding:10px 14px; border-radius:16px;
+    font-size:15px; line-height:1.45; word-wrap:break-word;
+  }
+  .chat-bubble.user{
+    align-self:flex-end; background:var(--sea-bright); color:var(--white);
+    border-bottom-right-radius:4px;
+  }
+  .chat-bubble.ai{
+    align-self:flex-start; background:var(--white); color:var(--ink);
+    border-bottom-left-radius:4px;
+  }
+  .chat-typing{
+    align-self:flex-start; font-size:13.5px; color:var(--ink-soft);
+    font-style:italic; padding:4px 6px;
+  }
+  .chat-input-row{display:flex; gap:8px;}
+  .chat-input{
+    flex:1; border:2px solid var(--sand-dark); border-radius:12px;
+    padding:11px 14px; font-size:15.5px; font-family:'Nunito'; outline:none;
+  }
+  .chat-input:focus{border-color:var(--sea-bright);}
+  .chat-send-btn{
+    flex:0 0 auto; background:var(--coral); color:var(--white); border:none;
+    border-radius:12px; padding:0 18px; font-weight:800; font-size:15px; cursor:pointer;
+  }
+
   @media (max-width:420px){
     .card{width:100%; flex-wrap:wrap;}
     .go-btn, .lock-tag{margin-left:auto;}
@@ -315,6 +349,7 @@
       <span>Đảo Từ Vựng</span>
     </div>
     <div class="topbar-right">
+      <button class="dict-btn" id="openChatBtn">💬 <span class="dict-btn-label">Trò Chuyện</span></button>
       <button class="dict-btn" id="openSpellBtn">🧩 <span class="dict-btn-label">Ghép Chữ</span></button>
       <button class="dict-btn" id="openDictBtn">📖 <span class="dict-btn-label">Tra từ</span></button>
       <div class="coins">🪙 <span id="coinTotal">0</span></div>
@@ -357,6 +392,19 @@
 
 <div id="spellOverlay" class="overlay hidden">
   <div class="modal" id="spellModalBox"></div>
+</div>
+
+<div id="chatOverlay" class="overlay hidden">
+  <div class="modal chat-modal">
+    <button class="close" id="chatCloseBtn">✕</button>
+    <h2 class="display">🦉 Cú Thông Thái</h2>
+    <p class="dict-sub">Con thử gõ tiếng Anh (hoặc tiếng Việt) để trò chuyện nhé!</p>
+    <div class="chat-messages" id="chatMessages"></div>
+    <div class="chat-input-row">
+      <input type="text" id="chatInput" class="chat-input" placeholder="Type here...">
+      <button class="chat-send-btn" id="chatSendBtn">Gửi</button>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -1431,6 +1479,84 @@ function finishSpellSession(){
   document.getElementById('coinTotal').textContent = coinTotal;
 }
 
+/* ---------- AI Chat (calls /api/chat, a Vercel serverless function) ---------- */
+
+let chatHistory = [];
+let chatBusy = false;
+
+function renderChatMessages(){
+  const box = document.getElementById('chatMessages');
+  box.innerHTML = chatHistory.map(m=>
+    `<div class="chat-bubble ${m.role === 'user' ? 'user' : 'ai'}">${escapeHtml(m.text)}</div>`
+  ).join('');
+  box.scrollTop = box.scrollHeight;
+}
+
+function escapeHtml(str){
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function openChat(){
+  document.getElementById('chatOverlay').classList.remove('hidden');
+  if(chatHistory.length === 0){
+    chatHistory.push({
+      role: 'ai',
+      text: "Hello! I'm the Wise Owl. What's your name? (Xin chào! Mình là Cú Thông Thái. Bạn tên gì?)"
+    });
+  }
+  renderChatMessages();
+  setTimeout(()=> document.getElementById('chatInput').focus(), 50);
+}
+
+function closeChat(){
+  document.getElementById('chatOverlay').classList.add('hidden');
+}
+
+async function sendChatMessage(){
+  if(chatBusy) return;
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if(!text) return;
+
+  chatHistory.push({ role:'user', text });
+  input.value = '';
+  renderChatMessages();
+
+  const box = document.getElementById('chatMessages');
+  const typing = document.createElement('div');
+  typing.className = 'chat-typing';
+  typing.id = 'chatTypingIndicator';
+  typing.textContent = 'Cú Thông Thái đang gõ...';
+  box.appendChild(typing);
+  box.scrollTop = box.scrollHeight;
+
+  chatBusy = true;
+  try{
+    const res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: text,
+        history: chatHistory.slice(0, -1).slice(-8)
+      })
+    });
+    const data = await res.json();
+    if(!res.ok || !data.reply){
+      chatHistory.push({ role:'ai', text: "Xin lỗi, mình chưa kết nối được với máy chủ AI. Bạn kiểm tra lại API key trên Vercel nhé! (Sorry, I couldn't connect right now.)" });
+    } else {
+      chatHistory.push({ role:'ai', text: data.reply });
+    }
+  }catch(e){
+    chatHistory.push({ role:'ai', text: "Xin lỗi, mình chưa kết nối được mạng. Bạn thử lại sau nhé! (Sorry, no connection right now.)" });
+  }
+  chatBusy = false;
+  const typingEl = document.getElementById('chatTypingIndicator');
+  if(typingEl) typingEl.remove();
+  renderChatMessages();
+}
+
 (async function init(){
   await loadProgress();
   document.getElementById('loadingMsg').classList.add('hidden');
@@ -1446,6 +1572,13 @@ function finishSpellSession(){
   });
 
   document.getElementById('openSpellBtn').addEventListener('click', openSpellGame);
+
+  document.getElementById('openChatBtn').addEventListener('click', openChat);
+  document.getElementById('chatCloseBtn').addEventListener('click', closeChat);
+  document.getElementById('chatSendBtn').addEventListener('click', sendChatMessage);
+  document.getElementById('chatInput').addEventListener('keydown', (e)=>{
+    if(e.key === 'Enter') sendChatMessage();
+  });
 })();
 </script>
 
